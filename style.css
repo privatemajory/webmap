@@ -1,3 +1,6 @@
+* {
+	font-family: 'Raleway', sans-serif;
+}
 html,
 body {
 	height: 100%;
@@ -5,14 +8,15 @@ body {
 	margin: 0;
 }
 #map {
-	height: calc(100vh - 40px);
+	height: calc(100vh - 41px);
 }
 .topbar {
 	height: 40px;
 	padding-left: 20px;
 	padding-right: 20px;
-	background: #4e4e4e;
-	color: #f0f0f0;
+	background: #f0f0f0;
+	color: #4e4e4e;
+	border-bottom: 1px solid #bcbcbc;
 }
 #buttons {
 	line-height: 40px;
@@ -22,17 +26,23 @@ body {
 	font-size: 1em;
 }
 button {
-	background-color: #6c6c6c;
-	color: #f0f0f0;
-	font-weight: bold;
-	border: 1px solid #3e3e3e;
-	border-bottom: 2px solid #3e3e3e;
+	background-color: #f0f0f0;
+	color: #6c6c6c;
+	font-weight: normal;
+	border: 1px solid #bcbcbc;
 	border-radius: 3px;
 	padding: 4px 8px;
 }
 select {
-	border: 1px solid #1c1c1c;
+	border: 1px solid #bcbcbc;
 	padding: 4px 8px;
 	background-color: white;
 	color: #6c6c6c;
+}
+#brand {
+	font-family: 'Lobster', cursive;
+	float: right;
+	line-height: 40px;
+	font-size: 24px;
+	color: #8d8d8d;
 }
