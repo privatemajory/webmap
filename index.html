@@ -44,13 +44,6 @@
 			attribution: "&copy; <a href='http://digitalglobe.com'>DigitalGlobe</a>"
 		});
 
-		var localwms = L.tileLayer.wms("http://localhost:8080/geoserver/mg_roadmap/wms", {
-			layers: 'mg_roadmap',
-			format: 'image/png',
-			transparent: true,
-			attribution: "&copy; <a href='http://geoserver.org'>GeoServer</a>"
-		});
-
 		var points = L.geoJSON(points, {
 			pointToLayer: function(feature, latlng) {
 				return L.circleMarker(latlng, {
@@ -88,8 +81,7 @@
 
 		var baseMap = {
 			"OSM Standard": osmlayer,
-			"DG Recent Imagery": dgmap,
-			"GeoServer": localwms
+			"DG Recent Imagery": dgmap
 		};
 
 		var overlays = {
