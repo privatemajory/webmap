@@ -1,0 +1,49 @@
+html,
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+#map {
+	height: calc(100vh - 40px);
+}
+.topbar {
+	height: 40px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+#buttons {
+	line-height: 40px;
+	float: left;
+}
+#buttons,
+#buttons * {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+select,
+button {
+	background-color: white;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	border-radius: 12px;
+	height: 24px;
+	padding: 0 8px;
+}
+
+/*.legend {
+	line-height: 20px;
+	padding: 8px 12px;
+	background: rgba(255, 255, 255, 0.8);
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+	border-radius: 5px;
+	display: none;
+}
+.legend i {
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin: 2px 8px;
+	margin-left: 0;
+	opacity: 0.8;
+	border-radius: 8px;
+}*/

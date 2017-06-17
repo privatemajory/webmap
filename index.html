@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" charset="utf-8" />
+	<title>Trajets des bus | Fianarantsoa</title>
+	<link rel="stylesheet" href="leaflet/leaflet.css" />
+	<link rel="stylesheet" href="style.css" />
+	<script src="leaflet/leaflet.js"></script>
+</head>
+
+<body>
+	<div class="topbar">
+		<form id="buttons" class='leaflet-control'>
+			<label>Choisir une ligne</label>
+			<select id="select" onchange="showSelectedRef()"></select>
+			<button type="button" onclick="showSelectedRef()">Montrer</button>
+		</form>
+	</div>
+	<div id="map"></div>
+	<script src="bus.js" type="text/javascript"></script>
+	<script src="points.js" type="text/javascript"></script>
+
+	<script>
+		var map = L.map('map', {
+			tap: true,
+			touchZoom: true
+		});
+
+		var osmlayer = L.tileLayer("http://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+			attribution: "&copy; <a href='https://openstreetmap.org'>OpenStreetMap</a>"
+		});
+
+		var dgmap = L.tileLayer("https://{s}.tiles.mapbox.com/v4/digitalglobe.nal0g75k/{z}/{x}/{y}.png?access_token={dgAccessToken}", {
+			dgAccessToken: 'pk.eyJ1IjoiZGlnaXRhbGdsb2JlIiwiYSI6ImNpeDA1bG5uNjAyMDAyeWxxOXY3d3NlamgifQ.cZj35H7r9uR0IWchorplmA',
+			maxZoom: 19,
+			minZoom: 1,
+			attribution: "&copy; <a href='http://digitalglobe.com'>DigitalGlobe</a>"
+		});
+
+		var points = L.geoJSON(points, {
+			pointToLayer: function(feature, latlng) {
+				return L.circleMarker(latlng, {
+					radius: 8,
+					color: '#ffffff',
+					weight: 1,
+					opacity: 1,
+					fillOpacity: 0.6
+				});
+			},
+			onEachFeature: function(feature, layer) {
+				if (feature.properties && feature.properties.name) {
+					layer.bindTooltip(feature.properties.name, {
+						direction: 'top'
+					})
+				};
+				layer.on({
+					click: zoomToPoint,
+					mouseover: highlightPoint,
+					mouseout: resetPointHighlight
+				})
+			},
+			style: pointStyle
+		});
+
+		var ulanes = [];
+
+		var routes = L.geoJSON(bus, {
+			onEachFeature: function(feature, layer) {
+				ulanes.push(feature.properties.ref);
+			}
+		});
+
+		var lanes = ulanes.sort();
+
+		var baseMap = {
+			"OSM Standard": osmlayer,
+			"DG Recent Imagery": dgmap
+		};
+
+		var overlays = {
+			"Terminus/Arrêts": points
+		};
+
+		var select = document.getElementById('select');
+		var layergroup = new L.LayerGroup();
+
+		var legend = L.control({
+			position: 'bottomright'
+		});
+
+		legend.onAdd = function(map) {
+			var div = L.DomUtil.create('div', 'legend');
+			div.innerHTML += '<i style="background: #ff6255"></i>Fiantsonana<br/><i style="background: #69b5d5"></i>Fijanonana';
+			return div;
+		};
+
+		for (var i in lanes) {
+			select.innerHTML += '<option id=' + i + '>' + lanes[i] + '</option>'
+		};
+
+		function pointColor(t) {
+			return t == "station" ? '#ff6255' : t == "stop_position" ? '#69b5d5' : '#eef65c';
+		}
+
+		function pointStyle(feature) {
+			return {
+				fillColor: pointColor(feature.properties.type)
+			};
+		}
+
+		function zoomToPoint(e) {
+			map.setView(e.latlng, 17);
+		}
+
+		function highlightPoint(e) {
+			e.target.setStyle({
+				radius: 16,
+				fillOpacity: 1,
+				weight: 2
+			});
+			this.bringToFront();
+		}
+
+		function resetPointHighlight(e) {
+			e.target.setStyle({
+				radius: 8,
+				weight: 1,
+				fillOpacity: 0.6
+			});
+			this.bringToBack();
+		}
+
+		function showSelectedRef() {
+			var layer = L.geoJSON(bus, {
+				filter: function(feature, layer) {
+					return feature.properties.ref == select.options[select.selectedIndex].text;
+				},
+				style: {
+					"color": '#9b9b9b',
+					"weight": 4,
+					"opacity": 1
+				},
+				onEachFeature: function(feature, layer) {
+					var popupContent = feature.properties.name.toUpperCase() + '<br/ >' + 'Avy ao: <b>' + feature.properties.from + '</b><br/ >' + 'Ka hatrao: <b>' + feature.properties.to + '</b>';
+					layer.bindPopup(popupContent)
+				}
+			});
+			layergroup.clearLayers();
+			layergroup.addLayer(layer);
+			layergroup.addTo(map);
+			layer.bringToFront();
+			map.fitBounds(layer.getBounds());
+		}
+
+		map.fitBounds(points.getBounds());
+		osmlayer.addTo(map);
+		//		points.addTo(map);
+		//		legend.addTo(map);
+		L.control.layers(baseMap, overlays).addTo(map);
+		L.control.scale({
+			imperial: false
+		}).addTo(map);
+	</script>
+
+</body>
+
+</html>

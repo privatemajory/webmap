@@ -1,1 +1,1 @@
-# webmap
+This repository contains sample maps I made, including web maps and printable maps.
