@@ -7,8 +7,12 @@ body {
 	width: 100%;
 	margin: 0;
 }
+body {
+	max-width: 1024px;
+	margin: auto;
+}
 #map {
-	height: calc(100vh - 41px);
+	height: calc(100vh - 41px - 31px);
 }
 .topbar {
 	height: 40px;
@@ -44,5 +48,20 @@ select {
 	float: right;
 	line-height: 40px;
 	font-size: 24px;
+	color: #8d8d8d;
+}
+#infowrapper {
+	height: 30px;
+	border-top: 1px solid #bcbcbc;
+	background: #f0f0f0;
+	display: flex;
+	align-items: center;
+}
+#info {
+	align-content: center;
+	margin: auto;
+}
+.greater_text {
+	font-weight: bold;
 	color: #8d8d8d;
 }

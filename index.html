@@ -21,6 +21,9 @@
 		<div id="brand">Busfi</div>
 	</div>
 	<div id="map"></div>
+	<div id="infowrapper">
+		<div id="info"></div>
+	</div>
 	<script src="bus.js" type="text/javascript"></script>
 	<script src="points.js" type="text/javascript"></script>
 
@@ -39,6 +42,13 @@
 			maxZoom: 19,
 			minZoom: 1,
 			attribution: "&copy; <a href='http://digitalglobe.com'>DigitalGlobe</a>"
+		});
+
+		var localwms = L.tileLayer.wms("http://localhost:8080/geoserver/mg_roadmap/wms", {
+			layers: 'mg_roadmap',
+			format: 'image/png',
+			transparent: true,
+			attribution: "&copy; <a href='http://geoserver.org'>GeoServer</a>"
 		});
 
 		var points = L.geoJSON(points, {
@@ -78,7 +88,8 @@
 
 		var baseMap = {
 			"OSM Standard": osmlayer,
-			"DG Recent Imagery": dgmap
+			"DG Recent Imagery": dgmap,
+			"GeoServer": localwms
 		};
 
 		var overlays = {
@@ -87,16 +98,6 @@
 
 		var select = document.getElementById('select');
 		var layergroup = new L.LayerGroup();
-
-		var legend = L.control({
-			position: 'bottomright'
-		});
-
-		legend.onAdd = function(map) {
-			var div = L.DomUtil.create('div', 'legend');
-			div.innerHTML += '<i style="background: #ff6255"></i>Fiantsonana<br/><i style="background: #69b5d5"></i>Fijanonana';
-			return div;
-		};
 
 		for (var i in lanes) {
 			select.innerHTML += '<option id=' + i + '>' + lanes[i] + '</option>'
@@ -145,10 +146,12 @@
 					"opacity": 1
 				},
 				onEachFeature: function(feature, layer) {
-					var popupContent = feature.properties.name.toUpperCase() + '<br/ >' + 'Avy ao: <b>' + feature.properties.from + '</b><br/ >' + 'Ka hatrao: <b>' + feature.properties.to + '</b>';
-					layer.bindPopup(popupContent)
+					var infoContent = feature.properties.name.toUpperCase() + " - de <span class='greater_text'>" + feature.properties.from + "</span>" + " à <span class='greater_text'>" + feature.properties.to + "</span>",
+							info = document.getElementById("info");
+					info.innerHTML = infoContent;
 				}
 			});
+			
 			layergroup.clearLayers();
 			layergroup.addLayer(layer);
 			layergroup.addTo(map);
@@ -158,8 +161,6 @@
 
 		map.fitBounds(points.getBounds());
 		osmlayer.addTo(map);
-		//		points.addTo(map);
-		//		legend.addTo(map);
 		L.control.layers(baseMap, overlays).addTo(map);
 		L.control.scale({
 			imperial: false
