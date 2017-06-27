@@ -1,1 +1,1 @@
-This repository contains sample maps I made, including web maps and printable maps.
+Simple Leaflet map with bus routes in Fianarantsoa.
