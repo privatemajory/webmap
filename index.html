@@ -18,7 +18,7 @@
 			<select id="select" onchange="showSelectedRef()"></select>
 			<button type="button" onclick="showSelectedRef()">Montrer</button>
 		</form>
-		<div id="brand">Busfi</div>
+		<div id="brand"><img src="img/busfi.png" alt="Busfi" height="22px"/></div>
 	</div>
 	<div id="map"></div>
 	<div id="infowrapper">
@@ -46,12 +46,9 @@
 
 		var points = L.geoJSON(points, {
 			pointToLayer: function(feature, latlng) {
-				return L.circleMarker(latlng, {
-					radius: 8,
-					color: '#ffffff',
-					weight: 1,
-					opacity: 1,
-					fillOpacity: 0.6
+				return L.marker(latlng, {
+					icon: chIcon(feature.properties.type),
+					opacity: 0.9
 				});
 			},
 			onEachFeature: function(feature, layer) {
@@ -66,7 +63,6 @@
 					mouseout: resetPointHighlight
 				})
 			},
-			style: pointStyle
 		});
 
 		var ulanes = [];
@@ -94,15 +90,9 @@
 		for (var i in lanes) {
 			select.innerHTML += '<option id=' + i + '>' + lanes[i] + '</option>'
 		};
-
-		function pointColor(t) {
-			return t == "station" ? '#ff6255' : t == "stop_position" ? '#69b5d5' : '#eef65c';
-		}
-
-		function pointStyle(feature) {
-			return {
-				fillColor: pointColor(feature.properties.type)
-			};
+		
+		function chIcon(t) {
+			return t == "station" ? L.icon({iconUrl:'img/bus.png',iconSize:[32,37],iconAnchor:[16,37],tooltipAnchor:[16,-37]}) : t == "stop_position" ? L.icon({iconUrl:'img/busstop.png',iconSize:[32,37],iconAnchor:[16,37],tooltipAnchor:[16,-37]}) : L.icon({iconUrl:'img/bus.png',iconSize:[32,37],iconAnchor:[16,37],tooltipAnchor:[16,-37]});
 		}
 
 		function zoomToPoint(e) {
@@ -110,20 +100,10 @@
 		}
 
 		function highlightPoint(e) {
-			e.target.setStyle({
-				radius: 16,
-				fillOpacity: 1,
-				weight: 2
-			});
 			this.bringToFront();
 		}
 
 		function resetPointHighlight(e) {
-			e.target.setStyle({
-				radius: 8,
-				weight: 1,
-				fillOpacity: 0.6
-			});
 			this.bringToBack();
 		}
 
