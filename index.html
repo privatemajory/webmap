@@ -48,7 +48,7 @@
 			pointToLayer: function(feature, latlng) {
 				return L.marker(latlng, {
 					icon: chIcon(feature.properties.type),
-					opacity: 0.9
+					opacity: 0.6
 				});
 			},
 			onEachFeature: function(feature, layer) {
@@ -59,8 +59,14 @@
 				};
 				layer.on({
 					click: zoomToPoint,
-					mouseover: highlightPoint,
-					mouseout: resetPointHighlight
+					mouseover: function() {
+						layer.setZIndexOffset(50);
+						layer.setOpacity(0.9)
+					},
+					mouseout: function() {
+						layer.setZIndexOffset(-50);
+						layer.setOpacity(0.6)
+					}
 				})
 			},
 		});
@@ -97,14 +103,6 @@
 
 		function zoomToPoint(e) {
 			map.setView(e.latlng, 17);
-		}
-
-		function highlightPoint(e) {
-			this.bringToFront();
-		}
-
-		function resetPointHighlight(e) {
-			this.bringToBack();
 		}
 
 		function showSelectedRef() {
